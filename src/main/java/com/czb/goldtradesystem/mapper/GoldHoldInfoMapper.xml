@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.czb.goldtradesystem.mapper.GoldHoldInfoMapper">
+  <resultMap id="BaseResultMap" type="com.czb.goldtradesystem.model.GoldHoldInfo">
+    <id column="id_card" jdbcType="VARCHAR" property="idCard" />
+    <result column="hold_amount" jdbcType="VARCHAR" property="holdAmount" />
+    <result column="product_type" jdbcType="VARCHAR" property="productType" />
+    <result column="opr_time" jdbcType="VARCHAR" property="oprTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id_card, hold_amount, product_type, opr_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gold_hold_info
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from gold_hold_info
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.czb.goldtradesystem.model.GoldHoldInfo">
+    insert into gold_hold_info (id_card, hold_amount, product_type, 
+      opr_time)
+    values (#{idCard,jdbcType=VARCHAR}, #{holdAmount,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, 
+      #{oprTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.czb.goldtradesystem.model.GoldHoldInfo">
+    insert into gold_hold_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="idCard != null">
+        id_card,
+      </if>
+      <if test="holdAmount != null">
+        hold_amount,
+      </if>
+      <if test="productType != null">
+        product_type,
+      </if>
+      <if test="oprTime != null">
+        opr_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="idCard != null">
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="holdAmount != null">
+        #{holdAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null">
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="oprTime != null">
+        #{oprTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.czb.goldtradesystem.model.GoldHoldInfo">
+    update gold_hold_info
+    <set>
+      <if test="holdAmount != null">
+        hold_amount = #{holdAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null">
+        product_type = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="oprTime != null">
+        opr_time = #{oprTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.czb.goldtradesystem.model.GoldHoldInfo">
+    update gold_hold_info
+    set hold_amount = #{holdAmount,jdbcType=VARCHAR},
+      product_type = #{productType,jdbcType=VARCHAR},
+      opr_time = #{oprTime,jdbcType=VARCHAR}
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.czb.goldtradesystem.mapper.GoldProfitInfoMapper">
+  <resultMap id="BaseResultMap" type="com.czb.goldtradesystem.model.GoldProfitInfo">
+    <id column="id_card" jdbcType="VARCHAR" property="idCard" />
+    <result column="product_type" jdbcType="VARCHAR" property="productType" />
+    <result column="actual_rate" jdbcType="DECIMAL" property="actualRate" />
+    <result column="yesterday_profit" jdbcType="DECIMAL" property="yesterdayProfit" />
+    <result column="total_profit" jdbcType="DECIMAL" property="totalProfit" />
+    <result column="enterprise_type" jdbcType="VARCHAR" property="enterpriseType" />
+    <result column="opr_time" jdbcType="VARCHAR" property="oprTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id_card, product_type, actual_rate, yesterday_profit, total_profit, enterprise_type, 
+    opr_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gold_profit_info
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from gold_profit_info
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.czb.goldtradesystem.model.GoldProfitInfo">
+    insert into gold_profit_info (id_card, product_type, actual_rate, 
+      yesterday_profit, total_profit, enterprise_type, 
+      opr_time)
+    values (#{idCard,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, #{actualRate,jdbcType=DECIMAL}, 
+      #{yesterdayProfit,jdbcType=DECIMAL}, #{totalProfit,jdbcType=DECIMAL}, #{enterpriseType,jdbcType=VARCHAR}, 
+      #{oprTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.czb.goldtradesystem.model.GoldProfitInfo">
+    insert into gold_profit_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="idCard != null">
+        id_card,
+      </if>
+      <if test="productType != null">
+        product_type,
+      </if>
+      <if test="actualRate != null">
+        actual_rate,
+      </if>
+      <if test="yesterdayProfit != null">
+        yesterday_profit,
+      </if>
+      <if test="totalProfit != null">
+        total_profit,
+      </if>
+      <if test="enterpriseType != null">
+        enterprise_type,
+      </if>
+      <if test="oprTime != null">
+        opr_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="idCard != null">
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null">
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="actualRate != null">
+        #{actualRate,jdbcType=DECIMAL},
+      </if>
+      <if test="yesterdayProfit != null">
+        #{yesterdayProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="totalProfit != null">
+        #{totalProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="enterpriseType != null">
+        #{enterpriseType,jdbcType=VARCHAR},
+      </if>
+      <if test="oprTime != null">
+        #{oprTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.czb.goldtradesystem.model.GoldProfitInfo">
+    update gold_profit_info
+    <set>
+      <if test="productType != null">
+        product_type = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="actualRate != null">
+        actual_rate = #{actualRate,jdbcType=DECIMAL},
+      </if>
+      <if test="yesterdayProfit != null">
+        yesterday_profit = #{yesterdayProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="totalProfit != null">
+        total_profit = #{totalProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="enterpriseType != null">
+        enterprise_type = #{enterpriseType,jdbcType=VARCHAR},
+      </if>
+      <if test="oprTime != null">
+        opr_time = #{oprTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.czb.goldtradesystem.model.GoldProfitInfo">
+    update gold_profit_info
+    set product_type = #{productType,jdbcType=VARCHAR},
+      actual_rate = #{actualRate,jdbcType=DECIMAL},
+      yesterday_profit = #{yesterdayProfit,jdbcType=DECIMAL},
+      total_profit = #{totalProfit,jdbcType=DECIMAL},
+      enterprise_type = #{enterpriseType,jdbcType=VARCHAR},
+      opr_time = #{oprTime,jdbcType=VARCHAR}
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </update>
+</mapper>

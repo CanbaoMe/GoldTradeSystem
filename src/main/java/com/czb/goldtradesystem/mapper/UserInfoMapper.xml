@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.czb.goldtradesystem.mapper.UserInfoMapper">
+  <resultMap id="BaseResultMap" type="com.czb.goldtradesystem.model.UserInfo">
+    <id column="id_card" jdbcType="VARCHAR" property="idCard" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="mobilephone" jdbcType="VARCHAR" property="mobilephone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="bind_acct_bank_num" jdbcType="VARCHAR" property="bindAcctBankNum" />
+    <result column="gold_hold_amount" jdbcType="VARCHAR" property="goldHoldAmount" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="add_time" jdbcType="VARCHAR" property="addTime" />
+    <result column="last_login_time" jdbcType="VARCHAR" property="lastLoginTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id_card, user_name, password, mobilephone, email, bind_acct_bank_num, gold_hold_amount, 
+    balance, add_time, last_login_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_info
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user_info
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.czb.goldtradesystem.model.UserInfo">
+    insert into user_info (id_card, user_name, password, 
+      mobilephone, email, bind_acct_bank_num, 
+      gold_hold_amount, balance, add_time, 
+      last_login_time)
+    values (#{idCard,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{mobilephone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{bindAcctBankNum,jdbcType=VARCHAR}, 
+      #{goldHoldAmount,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL}, #{addTime,jdbcType=VARCHAR}, 
+      #{lastLoginTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.czb.goldtradesystem.model.UserInfo">
+    insert into user_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="idCard != null">
+        id_card,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="mobilephone != null">
+        mobilephone,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="bindAcctBankNum != null">
+        bind_acct_bank_num,
+      </if>
+      <if test="goldHoldAmount != null">
+        gold_hold_amount,
+      </if>
+      <if test="balance != null">
+        balance,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="idCard != null">
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilephone != null">
+        #{mobilephone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="bindAcctBankNum != null">
+        #{bindAcctBankNum,jdbcType=VARCHAR},
+      </if>
+      <if test="goldHoldAmount != null">
+        #{goldHoldAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null">
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.czb.goldtradesystem.model.UserInfo">
+    update user_info
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilephone != null">
+        mobilephone = #{mobilephone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="bindAcctBankNum != null">
+        bind_acct_bank_num = #{bindAcctBankNum,jdbcType=VARCHAR},
+      </if>
+      <if test="goldHoldAmount != null">
+        gold_hold_amount = #{goldHoldAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null">
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.czb.goldtradesystem.model.UserInfo">
+    update user_info
+    set user_name = #{userName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      mobilephone = #{mobilephone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      bind_acct_bank_num = #{bindAcctBankNum,jdbcType=VARCHAR},
+      gold_hold_amount = #{goldHoldAmount,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=DECIMAL},
+      add_time = #{addTime,jdbcType=VARCHAR},
+      last_login_time = #{lastLoginTime,jdbcType=VARCHAR}
+    where id_card = #{idCard,jdbcType=VARCHAR}
+  </update>
+</mapper>

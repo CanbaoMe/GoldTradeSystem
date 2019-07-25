@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.czb.goldtradesystem.mapper.GoldSellInfoMapper">
+  <resultMap id="BaseResultMap" type="com.czb.goldtradesystem.model.GoldSellInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+    <result column="sell_amount" jdbcType="VARCHAR" property="sellAmount" />
+    <result column="product_type" jdbcType="VARCHAR" property="productType" />
+    <result column="add_money" jdbcType="DECIMAL" property="addMoney" />
+    <result column="opr_time" jdbcType="VARCHAR" property="oprTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, id_card, sell_amount, product_type, add_money, opr_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gold_sell_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from gold_sell_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.czb.goldtradesystem.model.GoldSellInfo">
+    insert into gold_sell_info (id, id_card, sell_amount, 
+      product_type, add_money, opr_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{idCard,jdbcType=VARCHAR}, #{sellAmount,jdbcType=VARCHAR}, 
+      #{productType,jdbcType=VARCHAR}, #{addMoney,jdbcType=DECIMAL}, #{oprTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.czb.goldtradesystem.model.GoldSellInfo">
+    insert into gold_sell_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="idCard != null">
+        id_card,
+      </if>
+      <if test="sellAmount != null">
+        sell_amount,
+      </if>
+      <if test="productType != null">
+        product_type,
+      </if>
+      <if test="addMoney != null">
+        add_money,
+      </if>
+      <if test="oprTime != null">
+        opr_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="idCard != null">
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="sellAmount != null">
+        #{sellAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null">
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="addMoney != null">
+        #{addMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="oprTime != null">
+        #{oprTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.czb.goldtradesystem.model.GoldSellInfo">
+    update gold_sell_info
+    <set>
+      <if test="idCard != null">
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="sellAmount != null">
+        sell_amount = #{sellAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null">
+        product_type = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="addMoney != null">
+        add_money = #{addMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="oprTime != null">
+        opr_time = #{oprTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.czb.goldtradesystem.model.GoldSellInfo">
+    update gold_sell_info
+    set id_card = #{idCard,jdbcType=VARCHAR},
+      sell_amount = #{sellAmount,jdbcType=VARCHAR},
+      product_type = #{productType,jdbcType=VARCHAR},
+      add_money = #{addMoney,jdbcType=DECIMAL},
+      opr_time = #{oprTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

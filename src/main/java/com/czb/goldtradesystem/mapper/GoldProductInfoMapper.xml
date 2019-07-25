@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.czb.goldtradesystem.mapper.GoldProductInfoMapper">
+  <resultMap id="BaseResultMap" type="com.czb.goldtradesystem.model.GoldProductInfo">
+    <id column="product_type" jdbcType="VARCHAR" property="productType" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="enterprise_rate" jdbcType="DECIMAL" property="enterpriseRate" />
+    <result column="opr_time" jdbcType="VARCHAR" property="oprTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    product_type, product_name, enterprise_rate, opr_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gold_product_info
+    where product_type = #{productType,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from gold_product_info
+    where product_type = #{productType,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.czb.goldtradesystem.model.GoldProductInfo">
+    insert into gold_product_info (product_type, product_name, enterprise_rate, 
+      opr_time)
+    values (#{productType,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{enterpriseRate,jdbcType=DECIMAL}, 
+      #{oprTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.czb.goldtradesystem.model.GoldProductInfo">
+    insert into gold_product_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productType != null">
+        product_type,
+      </if>
+      <if test="productName != null">
+        product_name,
+      </if>
+      <if test="enterpriseRate != null">
+        enterprise_rate,
+      </if>
+      <if test="oprTime != null">
+        opr_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productType != null">
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseRate != null">
+        #{enterpriseRate,jdbcType=DECIMAL},
+      </if>
+      <if test="oprTime != null">
+        #{oprTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.czb.goldtradesystem.model.GoldProductInfo">
+    update gold_product_info
+    <set>
+      <if test="productName != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseRate != null">
+        enterprise_rate = #{enterpriseRate,jdbcType=DECIMAL},
+      </if>
+      <if test="oprTime != null">
+        opr_time = #{oprTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where product_type = #{productType,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.czb.goldtradesystem.model.GoldProductInfo">
+    update gold_product_info
+    set product_name = #{productName,jdbcType=VARCHAR},
+      enterprise_rate = #{enterpriseRate,jdbcType=DECIMAL},
+      opr_time = #{oprTime,jdbcType=VARCHAR}
+    where product_type = #{productType,jdbcType=VARCHAR}
+  </update>
+</mapper>
