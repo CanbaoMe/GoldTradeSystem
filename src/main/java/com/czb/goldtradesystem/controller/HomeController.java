@@ -41,6 +41,7 @@ public class HomeController extends BaseController {
         in.setUserName(userName);
         in.setPassword(password);
         ValidLoginOut out = goldTradeSystem.validLogin(in);
+        loginResponse.setIdCardNum(out.getIdCardNum());
         loginResponse.setErrCode(out.getErrCode());
         loginResponse.setErrMsg(out.getErrMsg());
         return loginResponse;
