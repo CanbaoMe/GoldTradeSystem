@@ -1,6 +1,5 @@
 package com.czb.goldtradesystem.controller;
 
-import com.czb.goldtradesystem.api.BizException;
 import com.czb.goldtradesystem.api.in.SellGoldInfoIn;
 import com.czb.goldtradesystem.api.out.SellGoldInfoOut;
 import com.czb.goldtradesystem.mapper.GoldSellInfoMapper;
@@ -15,7 +14,7 @@ import  org.apache.logging.log4j.Logger;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-public class SellQueryRecController extends BaseController{
+public class QuerySellRecordController extends BaseController{
 
     private static final Logger log = LogManager.getLogger();
 
@@ -23,24 +22,19 @@ public class SellQueryRecController extends BaseController{
     GoldTradeSystemImpl goldTradeSystem;
     @Resource
     private GoldSellInfoMapper goldSellInfoMapper;
-    @PostMapping("/sellqueryrecord")
-    public QueryRecordResponse sellqueryrecord(@RequestBody @Valid QueryRecordRequest sellqueryRecordRequest){
+    @PostMapping("/querySellRecord")
+    public QueryRecordResponse querySellRecord(@RequestBody @Valid QueryRecordRequest querySellRecordRequest){
 
-        logger.info(sellqueryRecordRequest.getIdCardNum());
+        logger.info(querySellRecordRequest.getIdCardNum());
         QueryRecordResponse sellQueryRecordResponse = new QueryRecordResponse();
         SellGoldInfoIn in = new SellGoldInfoIn();
-        in.setIdCardNum(sellqueryRecordRequest.getIdCardNum());
-        in.setProductType(sellqueryRecordRequest.getProductType());
+        in.setIdCardNum(querySellRecordRequest.getIdCardNum());
+        in.setProductType(querySellRecordRequest.getProductType());
         SellGoldInfoOut out = new SellGoldInfoOut();
         try{
             out = goldTradeSystem.sellGoldInfo(in);
-            if(out == null ){
-                throw new BizException("该客户还未卖出黄金");
-
-            }
-
         }catch(Exception e){
-            log.error("查询错误",e);
+            log.error(e.getMessage(),e);
             throw  e;
 
         }
@@ -49,7 +43,5 @@ public class SellQueryRecController extends BaseController{
         sellQueryRecordResponse.setEarnMoney(out.getEarnMoney());
         sellQueryRecordResponse.setOprTime(out.getOprTime());
         return sellQueryRecordResponse;
-
     }
-
 }

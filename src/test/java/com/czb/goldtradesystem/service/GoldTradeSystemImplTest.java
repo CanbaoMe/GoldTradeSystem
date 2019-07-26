@@ -75,13 +75,35 @@ public class GoldTradeSystemImplTest {
     }
     @Test
     //用户信息查询
-    public void queryUserInfo() {
+    public void testQueryUserInfo() {
         UserInfoIn in = new UserInfoIn();
 
         in.setIdCardNum("33022619940707xxxx");
 
-        UserInfoOut out = goldTradeSystem.userInfo(in);
+        UserInfoOut out = goldTradeSystem.queryUserInfo(in);
         log.info("{}", out.getUserInfoList().toString());
+    }
+    @Test
+    //买入记录查询控制
+    public void testQueryPurchaseRecord() {
+        PurchaseGoldInfoIn in = new PurchaseGoldInfoIn();
+
+        in.setIdCardNum("33022619940707xxxx");
+        in.setProductType("1");
+
+        PurchaseGoldInfoOut out = goldTradeSystem.purchaseGoldInfo(in);
+        log.info("{}", out.toString());
+    }
+    @Test
+    //卖出记录查询控制
+    public void testQuerySellRecord() {
+        SellGoldInfoIn in = new SellGoldInfoIn();
+
+        in.setIdCardNum("33022619940707xxxx");
+        in.setProductType("1");
+
+       SellGoldInfoOut out = goldTradeSystem.sellGoldInfo(in);
+        log.info("{}", out.toString());
     }
 
 }

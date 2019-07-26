@@ -28,7 +28,7 @@ import  org.apache.logging.log4j.Logger;
  * @author wms bd
  */
 @RestController
-public class QueryRecordController extends BaseController {
+public class QueryPurchaseRecordController extends BaseController {
     private static final Logger log = LogManager.getLogger();
 
     @Autowired
@@ -36,31 +36,27 @@ public class QueryRecordController extends BaseController {
 
     @Resource
     private GoldPurchaseInfoMapper goldPurchaseInfoMapper;
-    @PostMapping("/queryrecord")
-    public QueryRecordResponse queryrecord(@RequestBody @Valid QueryRecordRequest queryRecordRequest){
 
-        logger.info(queryRecordRequest.getIdCardNum());
+    @PostMapping("/queryPurchaseRecord")
+    public QueryRecordResponse queryrecord(@RequestBody @Valid QueryRecordRequest queryPurchaseRecordRequest){
+
+        logger.info(queryPurchaseRecordRequest.getIdCardNum());
         QueryRecordResponse queryRecordResponse = new QueryRecordResponse();
-        PurchaseGoldInfoIn in_p = new PurchaseGoldInfoIn();
-        in_p.setIdCardNum(queryRecordRequest.getIdCardNum());
-        in_p.setProductType(queryRecordRequest.getProductType());
-        PurchaseGoldInfoOut out_p = new PurchaseGoldInfoOut();
+        PurchaseGoldInfoIn in = new PurchaseGoldInfoIn();
+        in.setIdCardNum(queryPurchaseRecordRequest.getIdCardNum());
+        in.setProductType(queryPurchaseRecordRequest.getProductType());
+        PurchaseGoldInfoOut out = new PurchaseGoldInfoOut();
         try{
-
-             out_p = goldTradeSystem.purchaseGoldInfo(in_p);
-
+            out = goldTradeSystem.purchaseGoldInfo(in);
         }catch (Exception e){
-
-            log.error("查询错误",e);
+            log.error(e.getMessage(),e);
             throw e;
-
         }
-        queryRecordResponse.setProductType(out_p.getProductType());
-        queryRecordResponse.setPurchaseAmount(out_p.getPurchaseAmount());
-        queryRecordResponse.setUesdMoney(out_p.getUesdMoney());
-        queryRecordResponse.setOprTime(out_p.getOprTime());
-
+        queryRecordResponse.setProductType(out.getProductType());
+        queryRecordResponse.setPurchaseAmount(out.getPurchaseAmount());
+        queryRecordResponse.setUesdMoney(out.getUesdMoney());
+        queryRecordResponse.setOprTime(out.getOprTime());
+        queryRecordResponse.setErrCode(out.getErrCode());
         return queryRecordResponse;
     }
-
 }

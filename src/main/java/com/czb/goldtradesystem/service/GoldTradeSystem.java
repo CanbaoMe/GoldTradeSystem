@@ -60,6 +60,6 @@ public interface GoldTradeSystem {
      * @param in
      * @return 所有信息
      */
-    public UserInfoOut userInfo(UserInfoIn in );
+    public UserInfoOut queryUserInfo(UserInfoIn in );
 
 }

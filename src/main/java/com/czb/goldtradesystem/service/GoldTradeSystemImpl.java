@@ -193,15 +193,17 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
         GoldPurchaseInfo goldPurchaseInfo = new GoldPurchaseInfo();
         goldPurchaseInfo.setIdCard(idCardNum);
         goldPurchaseInfo.setProductType(producyType);
-
         try{
             List<GoldPurchaseInfo> purchaseList = goldPurchaseInfoMapper.select(goldPurchaseInfo);
             out.setGoldPurchaseInfoList(purchaseList);
             if(purchaseList == null){
-                throw new BizException("该客户黄金买卖信息不存在");
+                throw new BizException("该客户黄金购买信息不存在");
             }
-        }catch (Exception e){
-            log.error("查询错误",e);
+        }catch(BizException e){
+            log.error("该客户黄金购买信息不存在",e);
+            throw e;
+        } catch (Exception e){
+            log.error("黄金购买信息查询错误",e);
             throw e;
         }
         return out;
@@ -213,45 +215,50 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
     public SellGoldInfoOut sellGoldInfo(SellGoldInfoIn in ){
 
         String idCardNum = in.getIdCardNum();
+        String productType = in.getProductType();
         SellGoldInfoOut out = new SellGoldInfoOut();
         GoldSellInfo goldSellInfo=new GoldSellInfo();
         goldSellInfo.setIdCard(idCardNum);
-
+        goldSellInfo.setProductType(productType);
         try{
             List<GoldSellInfo> list=goldSellInfoMapper.select(goldSellInfo);
             out.setGoldSellInfoList(list);
             if(list == null){
                 throw new BizException("该客户黄金卖出信息不存在");
             }
+        } catch(BizException e){
+            log.error("该客户黄金卖出信息不存在",e);
+            throw e;
         }catch(Exception e){
-            log.error("查询失败",e);
+            log.error("黄金卖出信息查询失败",e);
             throw  e;
         }
             return  out;
         }
     @Override
     @Transactional
-    public UserInfoOut userInfo(UserInfoIn in ){
+    public UserInfoOut queryUserInfo(UserInfoIn in){
         UserInfoOut out = new UserInfoOut();
         String idCardNum = in.getIdCardNum();
         UserInfo userInfo = new UserInfo();
         userInfo.setIdCard(idCardNum);
         try{
-            List<UserInfo> user_list=userInfoMapper.select(userInfo);
-            out.setUserInfoList(user_list);
-            if(user_list == null){
+            List<UserInfo> userList=userInfoMapper.select(userInfo);
+            out.setUserInfoList(userList);
+            if(userList == null){
                 throw new BizException("该客户信息不存在");
             }
-        }catch(Exception e){
-            log.error("查询失败",e);
+        }
+        catch (BizException e){
+            log.error("该客户信息不存在",e);
+            throw e;
+        }
+        catch(Exception e){
+            log.error("该客户信息查询失败",e);
             throw  e;
         }
         return  out;
-
     }
-
-
-
-   }
+}
 
 
