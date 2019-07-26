@@ -1,5 +1,6 @@
 package com.czb.goldtradesystem.controller;
 
+import com.czb.goldtradesystem.api.BizException;
 import com.czb.goldtradesystem.api.in.SellGoldInfoIn;
 import com.czb.goldtradesystem.api.out.SellGoldInfoOut;
 import com.czb.goldtradesystem.mapper.GoldSellInfoMapper;
@@ -14,7 +15,7 @@ import  org.apache.logging.log4j.Logger;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-public class QuerySellRecordController extends BaseController{
+public class SellQueryRecController extends BaseController{
 
     private static final Logger log = LogManager.getLogger();
 
@@ -22,14 +23,14 @@ public class QuerySellRecordController extends BaseController{
     GoldTradeSystemImpl goldTradeSystem;
     @Resource
     private GoldSellInfoMapper goldSellInfoMapper;
-    @PostMapping("/querySellRecord")
-    public QueryRecordResponse querySellRecord(@RequestBody @Valid QueryRecordRequest querySellRecordRequest){
+    @PostMapping("/querysellrecord")
+    public QueryRecordResponse sellqueryrecord(@RequestBody @Valid QueryRecordRequest sellqueryRecordRequest){
 
-        logger.info(querySellRecordRequest.getIdCardNum());
+        logger.info(sellqueryRecordRequest.getIdCardNum());
         QueryRecordResponse sellQueryRecordResponse = new QueryRecordResponse();
         SellGoldInfoIn in = new SellGoldInfoIn();
-        in.setIdCardNum(querySellRecordRequest.getIdCardNum());
-        in.setProductType(querySellRecordRequest.getProductType());
+        in.setIdCardNum(sellqueryRecordRequest.getIdCardNum());
+        in.setProductType(sellqueryRecordRequest.getProductType());
         SellGoldInfoOut out = new SellGoldInfoOut();
         try{
             out = goldTradeSystem.sellGoldInfo(in);
@@ -43,5 +44,7 @@ public class QuerySellRecordController extends BaseController{
         sellQueryRecordResponse.setEarnMoney(out.getEarnMoney());
         sellQueryRecordResponse.setOprTime(out.getOprTime());
         return sellQueryRecordResponse;
+
     }
+
 }
