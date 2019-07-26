@@ -9,6 +9,22 @@ public class UserInfo {
     @Id
     private String idCard;
 
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "idCard='" + idCard + '\'' +
+                ", userName='" + userName + '\'' +
+               // ", password='" + password + '\'' +
+                ", mobilephone='" + mobilephone + '\'' +
+                ", email='" + email + '\'' +
+                ", bindAcctBankNum='" + bindAcctBankNum + '\'' +
+                ", goldHoldAmount='" + goldHoldAmount + '\'' +
+                ", balance=" + balance +
+                ", addTime='" + addTime + '\'' +
+                ", lastLoginTime='" + lastLoginTime + '\'' +
+                '}';
+    }
+
     @Column(name="user_name")
     private String userName;
 

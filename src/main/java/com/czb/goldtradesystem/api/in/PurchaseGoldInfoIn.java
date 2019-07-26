@@ -1,13 +1,15 @@
 package com.czb.goldtradesystem.api.in;
 
+import com.czb.goldtradesystem.model.GoldPurchaseInfo;
 import lombok.Data;
 
-@Data
-public class SellGoldIn extends RequestIn{
-    private static final long serialVersionUID = 1L;
-    private String idCardNum;
-    private String sellAmount;
-    private String productType;
-    private String inquiryDate;//查询时间
+import java.util.List;
 
+@Data
+public class PurchaseGoldInfoIn extends RequestIn{
+    private static final long serialVersionUID = 1L;
+
+    private String idCardNum;
+    private String productType;
+   // private String purchaseAmount;
 }

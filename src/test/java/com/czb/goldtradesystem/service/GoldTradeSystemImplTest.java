@@ -1,12 +1,9 @@
 package com.czb.goldtradesystem.service;
 
 import com.czb.goldtradesystem.GoldTradeSystemApplication;
-import com.czb.goldtradesystem.api.in.PurchaseGoldIn;
-import com.czb.goldtradesystem.api.in.SellGoldIn;
-import com.czb.goldtradesystem.api.in.ValidLoginIn;
-import com.czb.goldtradesystem.api.out.PurchaseGoldOut;
-import com.czb.goldtradesystem.api.out.SellGoldOut;
-import com.czb.goldtradesystem.api.out.ValidLoginOut;
+import com.czb.goldtradesystem.api.in.*;
+import com.czb.goldtradesystem.api.out.*;
+import com.czb.goldtradesystem.model.UserInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
@@ -59,4 +56,32 @@ public class GoldTradeSystemImplTest {
         SellGoldOut out = goldTradeSystem.sellGold(in);
         log.info("{}", out.getErrCode());
     }
+    @Test
+    public void queryPurchaseGoldInfo() {
+        PurchaseGoldInfoIn in = new PurchaseGoldInfoIn();
+        in.setIdCardNum("33022619940707xxxx");
+        in.setProductType("1");
+        PurchaseGoldInfoOut out = goldTradeSystem.purchaseGoldInfo(in);
+        log.info("{}",out.getGoldPurchaseInfoList().toString());
+    }
+    @Test
+    //卖出信息测试
+    public void querySellGoldInfo() {
+        SellGoldInfoIn in = new SellGoldInfoIn();
+        in.setIdCardNum("33022619940707xxxx");
+
+        SellGoldInfoOut out = goldTradeSystem.sellGoldInfo(in);
+        log.info("{}", out.getGoldSellInfoList().toString());
+    }
+    @Test
+    //用户信息查询
+    public void queryUserInfo() {
+        UserInfoIn in = new UserInfoIn();
+
+        in.setIdCardNum("33022619940707xxxx");
+
+        UserInfoOut out = goldTradeSystem.userInfo(in);
+        log.info("{}", out.getUserInfoList().toString());
+    }
+
 }

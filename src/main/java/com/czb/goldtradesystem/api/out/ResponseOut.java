@@ -29,6 +29,10 @@ public class ResponseOut {
         return errMsg = ERR_MSG;
     }
 
+
+
+
+
     @Override
     public String toString() {
         return "ResponseOut{" +

@@ -1,12 +1,11 @@
 package com.czb.goldtradesystem.service;
 
 import com.czb.goldtradesystem.api.BizException;
-import com.czb.goldtradesystem.api.in.PurchaseGoldIn;
-import com.czb.goldtradesystem.api.in.SellGoldIn;
-import com.czb.goldtradesystem.api.in.ValidLoginIn;
-import com.czb.goldtradesystem.api.out.PurchaseGoldOut;
-import com.czb.goldtradesystem.api.out.SellGoldOut;
-import com.czb.goldtradesystem.api.out.ValidLoginOut;
+
+import com.czb.goldtradesystem.api.in.*;
+import com.czb.goldtradesystem.api.out.*;
+
+
 import com.czb.goldtradesystem.mapper.*;
 import com.czb.goldtradesystem.model.*;
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +38,9 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
     private GoldPurchaseInfoMapper goldPurchaseInfoMapper;
     @Resource
     private  GoldSellInfoMapper goldSellInfoMapper;
+    @Resource
+    private  GoldProfitInfoMapper goldProfitInfoMapper;
+
 
     @Override
     public ValidLoginOut validLogin(ValidLoginIn in)  {
@@ -114,9 +116,9 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
             log.error("查询黄金持有信息表错误",e);
             throw e;
         }
-        //买入黄金信息插入
+        //买入黄金信息插入把数据插入表信息
         GoldPurchaseInfo goldPurchaseInfo =new GoldPurchaseInfo();
-        goldPurchaseInfo.setIdCard(idCardNum);
+        goldPurchaseInfo.setIdCard(idCardNum);//
         goldPurchaseInfo.setPurchaseAmount(purchaseAmount);
         goldPurchaseInfo.setOprTime(currentTime);
         goldPurchaseInfo.setProductType(productType);
@@ -181,4 +183,75 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
 
         return  out;
     }
-}
+
+    @Override
+    @Transactional
+    public PurchaseGoldInfoOut purchaseGoldInfo(PurchaseGoldInfoIn in){
+        String idCardNum = in.getIdCardNum();
+        String producyType = in.getProductType();
+        PurchaseGoldInfoOut out = new PurchaseGoldInfoOut();
+        GoldPurchaseInfo goldPurchaseInfo = new GoldPurchaseInfo();
+        goldPurchaseInfo.setIdCard(idCardNum);
+        goldPurchaseInfo.setProductType(producyType);
+
+        try{
+            List<GoldPurchaseInfo> purchaseList = goldPurchaseInfoMapper.select(goldPurchaseInfo);
+            out.setGoldPurchaseInfoList(purchaseList);
+            if(purchaseList == null){
+                throw new BizException("该客户黄金买卖信息不存在");
+            }
+        }catch (Exception e){
+            log.error("查询错误",e);
+            throw e;
+        }
+        return out;
+    }
+
+
+    @Override
+    @Transactional
+    public SellGoldInfoOut sellGoldInfo(SellGoldInfoIn in ){
+
+        String idCardNum = in.getIdCardNum();
+        SellGoldInfoOut out = new SellGoldInfoOut();
+        GoldSellInfo goldSellInfo=new GoldSellInfo();
+        goldSellInfo.setIdCard(idCardNum);
+
+        try{
+            List<GoldSellInfo> list=goldSellInfoMapper.select(goldSellInfo);
+            out.setGoldSellInfoList(list);
+            if(list == null){
+                throw new BizException("该客户黄金卖出信息不存在");
+            }
+        }catch(Exception e){
+            log.error("查询失败",e);
+            throw  e;
+        }
+            return  out;
+        }
+    @Override
+    @Transactional
+    public UserInfoOut userInfo(UserInfoIn in ){
+        UserInfoOut out = new UserInfoOut();
+        String idCardNum = in.getIdCardNum();
+        UserInfo userInfo = new UserInfo();
+        userInfo.setIdCard(idCardNum);
+        try{
+            List<UserInfo> user_list=userInfoMapper.select(userInfo);
+            out.setUserInfoList(user_list);
+            if(user_list == null){
+                throw new BizException("该客户信息不存在");
+            }
+        }catch(Exception e){
+            log.error("查询失败",e);
+            throw  e;
+        }
+        return  out;
+
+    }
+
+
+
+   }
+
+

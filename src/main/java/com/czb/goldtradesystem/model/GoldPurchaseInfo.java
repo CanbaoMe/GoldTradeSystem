@@ -4,9 +4,21 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Table(name = "gold_purchase_info")
-public class GoldPurchaseInfo {
-    @Id
-    private Integer id;
+    public class GoldPurchaseInfo {
+        @Id
+        private Integer id;
+
+        @Override
+    public String toString() {
+        return "GoldPurchaseInfo{" +
+                "id=" + id +
+                ", idCard='" + idCard + '\'' +
+                ", purchaseAmount='" + purchaseAmount + '\'' +
+                ", oprTime='" + oprTime + '\'' +
+                ", productType='" + productType + '\'' +
+                ", uesdMoney=" + uesdMoney +
+                '}';
+    }
 
     @Column(name = "id_card")
     private String idCard;

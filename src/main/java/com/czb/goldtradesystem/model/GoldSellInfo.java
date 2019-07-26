@@ -7,6 +7,18 @@ import java.math.BigDecimal;
 public class GoldSellInfo {
     @Id
     private Integer id;
+    //alt+fn+insert属性信息
+    @Override
+    public String toString() {
+        return "GoldSellInfo{" +
+                "id=" + id +
+                ", idCard='" + idCard + '\'' +
+                ", sellAmount='" + sellAmount + '\'' +
+                ", productType='" + productType + '\'' +
+                ", addMoney=" + addMoney +
+                ", oprTime='" + oprTime + '\'' +
+                '}';
+    }
 
     @Column(name = "id_card")
     private String idCard;
