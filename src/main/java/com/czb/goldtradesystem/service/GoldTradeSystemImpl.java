@@ -52,6 +52,7 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
         UserInfo userInfo1 = new UserInfo();
         try{
             userInfo1 = userInfoMapper.selectOne(userInfo);
+            out.setIdCardNum(userInfo1.getIdCard());
             out.setSuccess();
             out.setSuccessMsg();
         } catch(BizException e){
