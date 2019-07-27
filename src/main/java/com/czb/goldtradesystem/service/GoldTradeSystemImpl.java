@@ -196,10 +196,14 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
         goldPurchaseInfo.setProductType(producyType);
         try{
             List<GoldPurchaseInfo> purchaseList = goldPurchaseInfoMapper.select(goldPurchaseInfo);
-            out.setGoldPurchaseInfoList(purchaseList);
             if(purchaseList == null){
+                out.setFailure();
+                out.setErrMsg("该客户黄金购买信息不存在");
                 throw new BizException("该客户黄金购买信息不存在");
             }
+            out.setGoldPurchaseInfoList(purchaseList);
+            out.setSuccess();
+            out.setErrMsg("查询黄金购买记录信息成功");
         }catch(BizException e){
             log.error("该客户黄金购买信息不存在",e);
             throw e;
@@ -214,7 +218,6 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
     @Override
     @Transactional
     public SellGoldInfoOut sellGoldInfo(SellGoldInfoIn in ){
-
         String idCardNum = in.getIdCardNum();
         String productType = in.getProductType();
         SellGoldInfoOut out = new SellGoldInfoOut();
@@ -223,10 +226,14 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
         goldSellInfo.setProductType(productType);
         try{
             List<GoldSellInfo> list=goldSellInfoMapper.select(goldSellInfo);
-            out.setGoldSellInfoList(list);
             if(list == null){
+                out.setFailure();
+                out.setErrMsg("该客户黄金卖出信息不存在");
                 throw new BizException("该客户黄金卖出信息不存在");
             }
+            out.setGoldSellInfoList(list);
+            out.setSuccess();
+            out.setErrMsg("查询黄金卖出记录信息成功");
         } catch(BizException e){
             log.error("该客户黄金卖出信息不存在",e);
             throw e;

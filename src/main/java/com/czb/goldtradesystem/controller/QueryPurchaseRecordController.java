@@ -37,11 +37,11 @@ public class QueryPurchaseRecordController extends BaseController {
     @Resource
     private GoldPurchaseInfoMapper goldPurchaseInfoMapper;
 
-    @PostMapping("/queryPurchaseRecord")
-    public QueryRecordResponse queryrecord(@RequestBody @Valid QueryRecordRequest queryPurchaseRecordRequest){
+    @PostMapping("/querypurchaserecord")
+    public QueryPurchaseRecordResponse queryPurchaseRecord(@RequestBody @Valid QueryPurchaseRecordRequest queryPurchaseRecordRequest){
 
         logger.info(queryPurchaseRecordRequest.getIdCardNum());
-        QueryRecordResponse queryRecordResponse = new QueryRecordResponse();
+        QueryPurchaseRecordResponse queryPurchaseRecordResponse = new QueryPurchaseRecordResponse();
         PurchaseGoldInfoIn in = new PurchaseGoldInfoIn();
         in.setIdCardNum(queryPurchaseRecordRequest.getIdCardNum());
         in.setProductType(queryPurchaseRecordRequest.getProductType());
@@ -52,11 +52,9 @@ public class QueryPurchaseRecordController extends BaseController {
             log.error(e.getMessage(),e);
             throw e;
         }
-        queryRecordResponse.setProductType(out.getProductType());
-        queryRecordResponse.setPurchaseAmount(out.getPurchaseAmount());
-        queryRecordResponse.setUesdMoney(out.getUesdMoney());
-        queryRecordResponse.setOprTime(out.getOprTime());
-        queryRecordResponse.setErrCode(out.getErrCode());
-        return queryRecordResponse;
+        queryPurchaseRecordResponse.setErrMsg(out.getErrMsg());
+        queryPurchaseRecordResponse.setErrCode(out.getErrCode());
+        queryPurchaseRecordResponse.setGoldPurchaseInfoList(out.getGoldPurchaseInfoList());
+        return queryPurchaseRecordResponse;
     }
 }
