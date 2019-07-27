@@ -3,6 +3,7 @@ package com.czb.goldtradesystem.service;
 import com.czb.goldtradesystem.api.AllUserInfo;
 import com.czb.goldtradesystem.api.BizException;
 
+import com.czb.goldtradesystem.api.MyGoldHoldInfo;
 import com.czb.goldtradesystem.api.in.*;
 import com.czb.goldtradesystem.api.out.*;
 
@@ -319,6 +320,69 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
             throw e;
         }catch(Exception e){
             log.error("黄金交易信息查询失败",e);
+            throw  e;
+        }
+        return out;
+    }
+
+    @Override
+    public QueryUserHoldInfoOut queryUserHoldInfo(QueryUserHoldInfoIn in) {
+        QueryUserHoldInfoOut out = new QueryUserHoldInfoOut();
+        String idCardNum = in.getIdCardNum();
+
+        GoldHoldInfo goldHoldInfo = new GoldHoldInfo();
+        goldHoldInfo.setIdCard(idCardNum);
+
+        Date getDate = Calendar.getInstance().getTime();
+        String currentTime = new SimpleDateFormat("yyyyMMdd").format(getDate);
+
+        List<MyGoldHoldInfo> myGoldHoldInfoList = new ArrayList<>();
+        try{
+            List<GoldHoldInfo> goldHoldInfoList = goldHoldInfoMapper.select(goldHoldInfo);
+            log.info("goldHoldInfoList={}",goldHoldInfoList);
+            if(goldHoldInfoList == null){
+                throw new BizException("该客户持仓信息不存在");
+            }
+            for(GoldHoldInfo goldHoldInfo1 : goldHoldInfoList){
+                MyGoldHoldInfo myGoldHoldInfo = new MyGoldHoldInfo();
+                myGoldHoldInfo.setHoldAmount(goldHoldInfo1.getHoldAmount());
+                myGoldHoldInfo.setIdCard(goldHoldInfo1.getIdCard());
+                myGoldHoldInfo.setProductType(goldHoldInfo1.getProductType());
+
+                //获取当日黄金持仓总价值
+                BigDecimal goldPrice = goldPriceInfoMapper.getGoldPrice(currentTime);
+                BigDecimal totalWorthMoney = (new BigDecimal(goldHoldInfo1.getHoldAmount())).multiply(goldPrice);
+                myGoldHoldInfo.setTotalWorth(totalWorthMoney);
+                log.info("当日黄金价格={}",totalWorthMoney);
+
+                //获取产品名称
+                GoldProductInfo goldProductInfo = new GoldProductInfo();
+                goldProductInfo.setProductType(goldHoldInfo1.getProductType());
+                GoldProductInfo goldProductInfo1 = goldProductInfoMapper.selectOne(goldProductInfo);
+                myGoldHoldInfo.setProductName(goldProductInfo1.getProductName());
+                log.info("获取产品名称={}",myGoldHoldInfo.getProductName());
+
+                //获取昨日收益与总收益
+                GoldProfitInfo goldProfitInfo = new GoldProfitInfo();
+                goldProfitInfo.setIdCard(idCardNum);
+                goldProfitInfo.setProductType(goldHoldInfo1.getProductType());
+                GoldProfitInfo goldProfitInfo1 = goldProfitInfoMapper.selectOne(goldProfitInfo);
+                myGoldHoldInfo.setYesterdayProfit(goldProfitInfo1.getYesterdayProfit());
+                myGoldHoldInfo.setTotalProfit(goldProfitInfo1.getTotalProfit());
+                log.info("获取昨日收益与总收益={},{}",myGoldHoldInfo.getYesterdayProfit(),myGoldHoldInfo.getTotalProfit());
+
+                myGoldHoldInfoList.add(myGoldHoldInfo);
+            }
+            out.setMyGoldHoldInfoList(myGoldHoldInfoList);
+            out.setSuccess();
+            out.setErrMsg("用户持仓信息查询成功");
+        }
+        catch (BizException e){
+            log.error("该客户持仓信息不存在",e);
+            throw e;
+        }
+        catch(Exception e){
+            log.error("该客户持仓信息查询失败",e);
             throw  e;
         }
         return out;

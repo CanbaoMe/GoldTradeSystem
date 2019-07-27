@@ -117,4 +117,13 @@ public class GoldTradeSystemImplTest {
         log.info("{}", out.toString());
 
     }
+
+    @Test
+    public void queryUserHoldInfo() {
+        QueryUserHoldInfoIn in = new QueryUserHoldInfoIn();
+        in.setIdCardNum("33022619940707xxxx");
+        QueryUserHoldInfoOut out = goldTradeSystem.queryUserHoldInfo(in);
+        log.info("out={}", out.toString());
+    }
+
 }
