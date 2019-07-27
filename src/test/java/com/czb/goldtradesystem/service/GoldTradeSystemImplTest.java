@@ -3,6 +3,7 @@ package com.czb.goldtradesystem.service;
 import com.czb.goldtradesystem.GoldTradeSystemApplication;
 import com.czb.goldtradesystem.api.in.*;
 import com.czb.goldtradesystem.api.out.*;
+import com.czb.goldtradesystem.model.QueryAllTradeRecordResponse;
 import com.czb.goldtradesystem.model.UserInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -106,4 +107,14 @@ public class GoldTradeSystemImplTest {
         log.info("{}", out.toString());
     }
 
+    @Test
+    public void queryUserAllTradeInfo() {
+        UserAllTradeInfoIn in = new UserAllTradeInfoIn();
+        in.setIdCardNum("33022619940707xxxx");
+        in.setProductType("1");
+
+        UserAllTradeInfoOut out = goldTradeSystem.queryUserAllTradeInfo(in);
+        log.info("{}", out.toString());
+
+    }
 }

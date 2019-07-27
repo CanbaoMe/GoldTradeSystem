@@ -1,5 +1,6 @@
 package com.czb.goldtradesystem.service;
 
+import com.czb.goldtradesystem.api.AllUserInfo;
 import com.czb.goldtradesystem.api.BizException;
 
 import com.czb.goldtradesystem.api.in.*;
@@ -17,6 +18,7 @@ import javax.annotation.Resource;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -266,6 +268,60 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
             throw  e;
         }
         return  out;
+    }
+
+    @Override
+    public UserAllTradeInfoOut queryUserAllTradeInfo(UserAllTradeInfoIn in) {
+        UserAllTradeInfoOut out = new UserAllTradeInfoOut();
+        String idCardNum = in.getIdCardNum();
+        String productType = in.getProductType();
+
+        GoldSellInfo goldSellInfo = new GoldSellInfo();
+        goldSellInfo.setIdCard(idCardNum);
+        goldSellInfo.setProductType(productType);
+
+        GoldPurchaseInfo goldPurchaseInfo = new GoldPurchaseInfo();
+        goldPurchaseInfo.setIdCard(idCardNum);
+        goldPurchaseInfo.setProductType(productType);
+
+        List<AllUserInfo> allUserInfoList = new ArrayList<>();
+        try{
+            List<GoldSellInfo> goldSellInfoList=goldSellInfoMapper.select(goldSellInfo);
+            List<GoldPurchaseInfo> goldPurchaseInfoList = goldPurchaseInfoMapper.select(goldPurchaseInfo);
+            if(goldSellInfoList == null && goldPurchaseInfoList == null){
+                out.setFailure();
+                out.setErrMsg("该客户交易信息不存在");
+                throw new BizException("该客户交易信息不存在");
+            }
+            for(GoldSellInfo goldSellInfo1 : goldSellInfoList){
+                AllUserInfo allUserInfo = new AllUserInfo();
+                allUserInfo.setIdCard(goldSellInfo1.getIdCard());
+                allUserInfo.setProductType(goldSellInfo1.getProductType());
+                allUserInfo.setSellAmount(goldSellInfo1.getSellAmount());
+                allUserInfo.setOprTime(goldSellInfo1.getOprTime());
+                allUserInfo.setAddMoney(goldSellInfo1.getAddMoney());
+                allUserInfoList.add(allUserInfo);
+            }
+            for(GoldPurchaseInfo purchaseInfo1 :  goldPurchaseInfoList){
+                AllUserInfo allUserInfo = new AllUserInfo();
+                allUserInfo.setIdCard(purchaseInfo1.getIdCard());
+                allUserInfo.setProductType(purchaseInfo1.getProductType());
+                allUserInfo.setPurchaseAmount(purchaseInfo1.getPurchaseAmount());
+                allUserInfo.setOprTime(purchaseInfo1.getOprTime());
+                allUserInfo.setUesdMoney(purchaseInfo1.getUesdMoney());
+                allUserInfoList.add(allUserInfo);
+            }
+            out.setAllUserInfoList(allUserInfoList);
+            out.setSuccess();
+            out.setErrMsg("查询黄金交易信息记录成功");
+        } catch(BizException e){
+            log.error("该客户黄金交易信息不存在",e);
+            throw e;
+        }catch(Exception e){
+            log.error("黄金交易信息查询失败",e);
+            throw  e;
+        }
+        return out;
     }
 }
 
