@@ -9,7 +9,7 @@ public class MyGoldHoldInfo {
 
     private String idCard;
 
-    private String holdAmount;
+    private BigDecimal holdAmount;
 
     private String productType;
 

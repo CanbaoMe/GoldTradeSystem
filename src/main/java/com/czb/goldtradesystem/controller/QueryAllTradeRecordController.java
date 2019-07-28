@@ -25,7 +25,7 @@ public class QueryAllTradeRecordController extends BaseController{
         QueryAllTradeRecordResponse queryAllTradeRecordResponse = new QueryAllTradeRecordResponse();
         UserAllTradeInfoIn in = new UserAllTradeInfoIn();
         in.setIdCardNum(queryAllTradeRecordRequest.getIdCardNum());
-        in.setProductType(queryAllTradeRecordRequest.getProductType());
+       // in.setProductType(queryAllTradeRecordRequest.getProductType());
         UserAllTradeInfoOut out = new UserAllTradeInfoOut();
         try{
             out = goldTradeSystem.queryUserAllTradeInfo(in);
@@ -33,7 +33,7 @@ public class QueryAllTradeRecordController extends BaseController{
             log.error(e.getMessage(),e);
             throw e;
         }
-        logger.info("getAllUserInfoList=",out.getAllUserInfoList());
+        logger.info("getAllUserInfoList={}",out.getAllUserInfoList());
         queryAllTradeRecordResponse.setAllUserInfoList(out.getAllUserInfoList());
         queryAllTradeRecordResponse.setErrCode(out.getErrCode());
         queryAllTradeRecordResponse.setErrMsg(out.getErrMsg());

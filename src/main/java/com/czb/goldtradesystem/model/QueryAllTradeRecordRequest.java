@@ -11,7 +11,7 @@ public class QueryAllTradeRecordRequest extends RequestIn {
     @NotNull
     String idCardNum;
 
-    @ApiModelProperty("产品类型")
-    @NotNull
-    String productType;
+//    @ApiModelProperty("产品类型")
+//    @NotNull
+//    String productType;
 }

@@ -81,7 +81,7 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
     @Transactional
     public PurchaseGoldOut purchaseGold(PurchaseGoldIn in) {
         PurchaseGoldOut out = new PurchaseGoldOut();
-        String purchaseAmount = in.getPurchaseAmount();
+        BigDecimal purchaseAmount = in.getPurchaseAmount();
         String productType = in.getProductType();
         String idCardNum = in.getIdCardNum();
 
@@ -93,42 +93,53 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(idCardNum);
         log.info("用户信息表：{}",userInfo.toString());
         BigDecimal balance = userInfo.getBalance();
+        BigDecimal holdAmount =  userInfo.getGoldHoldAmount();
         //购买黄金总价格
-        BigDecimal totalMoney = (new BigDecimal(purchaseAmount)).multiply(goldPrice);
+        BigDecimal totalMoney = purchaseAmount.multiply(goldPrice);
         if(totalMoney.compareTo(balance) > 1 ){
             throw new BizException("购买黄金余额不足");
         }
         balance = balance.subtract(totalMoney);
         userInfo.setBalance(balance);
+        userInfo.setGoldHoldAmount(holdAmount.add(purchaseAmount));
         //更新用户信息表中余额
         userInfoMapper.updateByPrimaryKey(userInfo);
 
         //插入或更新黄金持有信息表
         GoldHoldInfo goldHoldInfo = new GoldHoldInfo();
         goldHoldInfo.setIdCard(idCardNum);
+        goldHoldInfo.setProductType(productType);
+        //goldHoldInfo.setHoldAmount();
+        GoldHoldInfo goldHoldInfo1 = new GoldHoldInfo();
         try{
-            GoldHoldInfo goldHoldInfo1 = goldHoldInfoMapper.selectOne(goldHoldInfo);
+            goldHoldInfo1 = goldHoldInfoMapper.selectByIdAndType(idCardNum,productType);
             if(goldHoldInfo1 == null){
                 goldHoldInfo.setHoldAmount(purchaseAmount);
                 goldHoldInfo.setOprTime(currentTime);
                 goldHoldInfo.setProductType(productType);
                 goldHoldInfoMapper.insert(goldHoldInfo);
+            }else{
+                goldHoldInfo1.setHoldAmount(purchaseAmount.add(goldHoldInfo1.getHoldAmount()));
+                goldHoldInfo1.setOprTime(currentTime);
+                goldHoldInfoMapper.updateByPrimaryKey(goldHoldInfo1);
             }
-            goldHoldInfo1.setHoldAmount(String.valueOf(Integer.parseInt(purchaseAmount)+Integer.parseInt(goldHoldInfo1.getHoldAmount())));
-            goldHoldInfoMapper.updateByPrimaryKey(goldHoldInfo1);
+            log.info("goldHoldInfo1={}",goldHoldInfo1);
+            //goldHoldInfoMapper.goldHoldInsert(goldHoldInfo1);
         }catch (Exception e){
-            log.error("查询黄金持有信息表错误",e);
-            throw e;
-        }
+        log.error("查询黄金持有信息表错误",e);
+        throw e;
+    }
+
         //买入黄金信息插入把数据插入表信息
         GoldPurchaseInfo goldPurchaseInfo =new GoldPurchaseInfo();
-        goldPurchaseInfo.setIdCard(idCardNum);//
+        goldPurchaseInfo.setIdCard(idCardNum);
         goldPurchaseInfo.setPurchaseAmount(purchaseAmount);
         goldPurchaseInfo.setOprTime(currentTime);
         goldPurchaseInfo.setProductType(productType);
         goldPurchaseInfo.setUesdMoney(totalMoney);
         goldPurchaseInfoMapper.insert(goldPurchaseInfo);
-
+        //把数据插入持有表信息
+        //goldHoldInfoMapper.insert(goldHoldInfo);
         out.setSuccess();
         out.setErrMsg("购买黄金成功");
         return out;
@@ -139,19 +150,21 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
     public SellGoldOut sellGold(SellGoldIn in) {
         SellGoldOut out = new SellGoldOut();
         String idCardNum = in.getIdCardNum();
-        String sellAmount = in.getSellAmount();
+        BigDecimal sellAmount = in.getSellAmount();
         String productType = in.getProductType();
         //更新持有量，如果持有数目小于卖出数量则报错
         GoldHoldInfo goldHoldInfo = new GoldHoldInfo();
+        goldHoldInfo.setProductType(productType);
+        goldHoldInfo.setIdCard(idCardNum);
         try{
             GoldHoldInfo goldHoldInfo1 = goldHoldInfoMapper.selectOne(goldHoldInfo);
             if(goldHoldInfo1 == null){
                 throw new BizException("该客户黄金持有信息不存在");
             }
-            if(Integer.parseInt(goldHoldInfo1.getHoldAmount()) < Integer.parseInt(sellAmount)){
+            if(goldHoldInfo1.getHoldAmount().compareTo(sellAmount)<0){
                 throw new BizException("卖出黄金数量大于持有量");
             }
-            goldHoldInfo1.setHoldAmount(String.valueOf(Integer.parseInt(goldHoldInfo1.getHoldAmount())-Integer.parseInt(sellAmount)));
+            goldHoldInfo1.setHoldAmount(goldHoldInfo1.getHoldAmount().subtract(sellAmount));
             goldHoldInfoMapper.updateByPrimaryKey(goldHoldInfo1);
         }catch (BizException e){
             log.error(e.getMessage());
@@ -167,7 +180,7 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
         //获取当日黄金价格
         BigDecimal goldPrice = goldPriceInfoMapper.getGoldPrice(currentTime);
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(idCardNum);
-        BigDecimal totalSellMoney = (new BigDecimal(sellAmount)).multiply(goldPrice);
+        BigDecimal totalSellMoney = sellAmount.multiply(goldPrice);
         userInfo.setBalance(userInfo.getBalance().add(totalSellMoney));
         userInfo.setLastLoginTime(currentTime);
 
@@ -275,15 +288,15 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
     public UserAllTradeInfoOut queryUserAllTradeInfo(UserAllTradeInfoIn in) {
         UserAllTradeInfoOut out = new UserAllTradeInfoOut();
         String idCardNum = in.getIdCardNum();
-        String productType = in.getProductType();
+        //String productType = in.getProductType();
 
         GoldSellInfo goldSellInfo = new GoldSellInfo();
         goldSellInfo.setIdCard(idCardNum);
-        goldSellInfo.setProductType(productType);
+       // goldSellInfo.setProductType(productType);
 
         GoldPurchaseInfo goldPurchaseInfo = new GoldPurchaseInfo();
         goldPurchaseInfo.setIdCard(idCardNum);
-        goldPurchaseInfo.setProductType(productType);
+        //goldPurchaseInfo.setProductType(productType);
 
         List<AllUserInfo> allUserInfoList = new ArrayList<>();
         try{
@@ -351,7 +364,7 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
 
                 //获取当日黄金持仓总价值
                 BigDecimal goldPrice = goldPriceInfoMapper.getGoldPrice(currentTime);
-                BigDecimal totalWorthMoney = (new BigDecimal(goldHoldInfo1.getHoldAmount())).multiply(goldPrice);
+                BigDecimal totalWorthMoney = goldHoldInfo1.getHoldAmount().multiply(goldPrice);
                 myGoldHoldInfo.setTotalWorth(totalWorthMoney);
                 log.info("当日黄金价格={}",totalWorthMoney);
 
@@ -376,12 +389,10 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
             out.setMyGoldHoldInfoList(myGoldHoldInfoList);
             out.setSuccess();
             out.setErrMsg("用户持仓信息查询成功");
-        }
-        catch (BizException e){
+        } catch (BizException e){
             log.error("该客户持仓信息不存在",e);
             throw e;
-        }
-        catch(Exception e){
+        } catch(Exception e){
             log.error("该客户持仓信息查询失败",e);
             throw  e;
         }

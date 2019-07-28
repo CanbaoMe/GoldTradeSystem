@@ -10,9 +10,9 @@ public class AllUserInfo {
 
     private String idCard;
 
-    private String sellAmount;
+    private BigDecimal sellAmount;
 
-    private String purchaseAmount;
+    private BigDecimal purchaseAmount;
 
     private String productType;
 
