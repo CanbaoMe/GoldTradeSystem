@@ -1,5 +1,8 @@
 package com.czb.goldtradesystem.service;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.czb.goldtradesystem.api.AllUserInfo;
 import com.czb.goldtradesystem.api.BizException;
 
@@ -10,8 +13,14 @@ import com.czb.goldtradesystem.api.out.*;
 
 import com.czb.goldtradesystem.mapper.*;
 import com.czb.goldtradesystem.model.*;
+
+import com.alibaba.fastjson.JSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +28,8 @@ import javax.annotation.Resource;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -44,37 +51,71 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
     @Resource
     private  GoldProfitInfoMapper goldProfitInfoMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public ValidLoginOut validLogin(ValidLoginIn in)  {
         //校验用户名 密码是否在数据库中匹配
+        String key = "GoldTradeSystemInfo:AllUserInfo:"+ in.getUserName();
         ValidLoginOut out = new ValidLoginOut();
         UserInfo userInfo = new UserInfo();
         userInfo.setUserName(in.getUserName());
         userInfo.setPassword(in.getPassword());
         UserInfo userInfo1 = new UserInfo();
-        try{
-            userInfo1 = userInfoMapper.selectOne(userInfo);
+
+        boolean hasKey = stringRedisTemplate.hasKey(key);
+        if (hasKey) {
+            String userInfoString = stringRedisTemplate.opsForValue().get(key);
+            //userInfo1= JSONArray.parseArray(goldProductInfoListString,UserInfo.class);
+            userInfo1 = JSONObject.parseObject(userInfoString,UserInfo.class);
+            log.info("redis 数据源 userInfo1={}",userInfo1);
             out.setIdCardNum(userInfo1.getIdCard());
             out.setSuccess();
             out.setSuccessMsg();
-        } catch(BizException e){
-            log.error("用户不存在");
-        } catch (Exception e) {
-            log.error("查询失败，请稍后再试",e);
-            throw e;
+            return out;
+        } else{
+            try{
+                userInfo1 = userInfoMapper.selectOne(userInfo);
+                if(userInfo1 == null){
+                    out.setFailure();
+                    out.setErrMsg("用户不存在");
+                    throw new BizException("用户不存在");
+                }
+            } catch(BizException e){
+                log.error("用户不存在");
+            } catch (Exception e) {
+                log.error("查询失败，请稍后再试",e);
+                throw e;
+            }
+            stringRedisTemplate.opsForValue().set(key, JSON.toJSONString(userInfo1));
+            log.info("database 数据源");
+            out.setIdCardNum(userInfo1.getIdCard());
+            out.setSuccess();
+            out.setSuccessMsg();
+            return out;
         }
-        if(userInfo1 == null){
-            out.setFailure();
-            out.setErrMsg("用户不存在");
-        }
-        return out;
     }
 
     @Override
     public List<GoldProductInfo> queryAllProductInfo() {
-        List<GoldProductInfo> goldProductInfoList = goldProductInfoMapper.queryAllProductInfo();
-        return goldProductInfoList;
+        String key = "GoldTradeSystemInfo:AllProductInfo" ;
+        boolean hasKey = stringRedisTemplate.hasKey(key);
+        List<GoldProductInfo> goldProductInfoList = null;
+        if (hasKey) {
+            String goldProductInfoListString = stringRedisTemplate.opsForValue().get(key);
+            goldProductInfoList= JSONArray.parseArray(goldProductInfoListString,GoldProductInfo.class);
+            log.info("redis 数据源 goldProductInfoList={}",goldProductInfoList);
+            return goldProductInfoList;
+        } else{
+            goldProductInfoList = goldProductInfoMapper.queryAllProductInfo();
+            stringRedisTemplate.opsForValue().set(key, JSON.toJSONString(goldProductInfoList));
+            log.info("database 数据源");
+            return goldProductInfoList;
+        }
     }
 
     @Override
