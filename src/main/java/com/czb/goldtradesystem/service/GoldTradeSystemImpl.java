@@ -439,6 +439,37 @@ public class GoldTradeSystemImpl implements GoldTradeSystem {
         }
         return out;
     }
+
+    @Override
+    @Transactional
+    public BalanceInfoOut balanceInfo(BalanceInfoIn in){
+        BalanceInfoOut out = new BalanceInfoOut();
+        String idCardNum = in.getIdCardNum();
+
+
+        try {
+
+            BigDecimal balance = userInfoMapper.selectBalance(idCardNum);
+            if (balance == null) {
+                out.setFailure();
+                out.setErrMsg("该用户余额信息不存在");
+                throw new BizException("该用户余额信息不存在");
+            }else{
+                out.setBalance(balance);
+                out.setSuccess();
+                out.setErrMsg("用户余额查询成功");
+            }
+        } catch (BizException e){
+            log.error("该用户余额信息不存在", e);
+            throw e;
+        } catch (Exception e) {
+            log.error("用户余额查询错误", e);
+            throw e;
+        }
+
+        return out;
+    }
+
 }
 
 

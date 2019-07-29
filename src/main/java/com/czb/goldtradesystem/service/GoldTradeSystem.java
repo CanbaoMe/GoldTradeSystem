@@ -75,4 +75,12 @@ public interface GoldTradeSystem {
      * @return 所有信息
      */
     public QueryUserHoldInfoOut  queryUserHoldInfo(QueryUserHoldInfoIn in);
+
+    /**
+     * 查询余额
+     * @param in
+     * @return
+     */
+    public BalanceInfoOut balanceInfo(BalanceInfoIn in);
+
 }

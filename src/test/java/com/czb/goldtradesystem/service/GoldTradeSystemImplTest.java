@@ -148,4 +148,11 @@ public class GoldTradeSystemImplTest {
 //        System.out.println("redis每秒操作：" + i + "次");
 //    }
 
+    @Test
+    public void balanceInfo() {
+        BalanceInfoIn  in = new BalanceInfoIn();
+        in.setIdCardNum("33022619940707xxxx");
+        BalanceInfoOut out = goldTradeSystem.balanceInfo(in);
+        log.info("out={}", out.toString());
+    }
 }
