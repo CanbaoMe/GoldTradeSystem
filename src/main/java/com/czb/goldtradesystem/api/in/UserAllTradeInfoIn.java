@@ -2,13 +2,9 @@ package com.czb.goldtradesystem.api.in;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 @Data
-public class PurchaseGoldIn extends RequestIn{
+public class UserAllTradeInfoIn extends RequestIn{
     private static final long serialVersionUID = 1L;
-
+   // private String productType;
     private String idCardNum;
-    private String productType;
-    private BigDecimal purchaseAmount;
 }

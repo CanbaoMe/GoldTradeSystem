@@ -3,6 +3,7 @@ package com.czb.goldtradesystem.service;
 import com.czb.goldtradesystem.GoldTradeSystemApplication;
 import com.czb.goldtradesystem.api.in.*;
 import com.czb.goldtradesystem.api.out.*;
+import com.czb.goldtradesystem.model.QueryAllTradeRecordResponse;
 import com.czb.goldtradesystem.model.UserInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,8 +12,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.annotation.Resource;
+//import redis.clients.jedis.Jedis;
+//
+//import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -41,7 +44,7 @@ public class GoldTradeSystemImplTest {
     public void purchaseGoldOut() {
         PurchaseGoldIn in = new PurchaseGoldIn();
         in.setIdCardNum("33022619940707xxxx");
-        in.setPurchaseAmount("2");
+        in.setPurchaseAmount(new BigDecimal("2"));
         in.setProductType("1");
         PurchaseGoldOut out = goldTradeSystem.purchaseGold(in);
         log.info("{}",out.toString());
@@ -51,7 +54,7 @@ public class GoldTradeSystemImplTest {
     public void sellGold() {
         SellGoldIn in = new SellGoldIn();
         in.setIdCardNum("33022619940707xxxx");
-        in.setSellAmount("2");
+        in.setSellAmount(new BigDecimal("2"));
         in.setProductType("1");
         SellGoldOut out = goldTradeSystem.sellGold(in);
         log.info("{}", out.getErrCode());
@@ -105,5 +108,44 @@ public class GoldTradeSystemImplTest {
        SellGoldInfoOut out = goldTradeSystem.sellGoldInfo(in);
         log.info("{}", out.toString());
     }
+
+    @Test
+    public void queryUserAllTradeInfo() {
+        UserAllTradeInfoIn in = new UserAllTradeInfoIn();
+        in.setIdCardNum("33022619940707xxxx");
+        //in.setProductType("1");
+
+        UserAllTradeInfoOut out = goldTradeSystem.queryUserAllTradeInfo(in);
+        log.info("{}", out.toString());
+
+    }
+
+    @Test
+    public void queryUserHoldInfo() {
+        QueryUserHoldInfoIn in = new QueryUserHoldInfoIn();
+        in.setIdCardNum("33022619940707xxxx");
+        QueryUserHoldInfoOut out = goldTradeSystem.queryUserHoldInfo(in);
+        log.info("out={}", out.toString());
+    }
+//    @Test
+//    public void redisTester() {
+//        Jedis jedis = new Jedis("localhost", 6379, 100000);
+//        int i = 0;
+//        try {
+//            long start = System.currentTimeMillis();// 开始毫秒数
+//            while (true) {
+//                long end = System.currentTimeMillis();
+//                if (end - start >= 1000) {// 当大于等于1000毫秒（相当于1秒）时，结束操作
+//                    break;
+//                }
+//                i++;
+//                jedis.set("test" + i, i + "");
+//            }
+//        } finally {// 关闭连接
+//            jedis.close();
+//        }
+//        // 打印1秒内对Redis的操作次数
+//        System.out.println("redis每秒操作：" + i + "次");
+//    }
 
 }

@@ -17,6 +17,7 @@
     <properties>
         <java.version>1.8</java.version>
         <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
+        <elastic-job.version>2.1.5</elastic-job.version>
     </properties>
 
     <dependencies>
@@ -84,6 +85,48 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.1.0</version>
         </dependency>
+        <!-- elastic-job-core-->
+        <dependency>
+            <groupId>com.dangdang</groupId>
+            <artifactId>elastic-job-lite-core</artifactId>
+            <version>${elastic-job.version}</version>
+        </dependency>
+        <!-- elastic-job-lite-spring -->
+        <dependency>
+            <groupId>com.dangdang</groupId>
+            <artifactId>elastic-job-lite-spring</artifactId>
+            <version>${elastic-job.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+<!--        <dependency>-->
+<!--            <groupId>redis.clients</groupId>-->
+<!--            <artifactId>jedis</artifactId>-->
+<!--            <version>3.0.1</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.data/spring-data-redis &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.data</groupId>-->
+<!--            <artifactId>spring-data-redis</artifactId>-->
+<!--            <version>2.1.8.RELEASE</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/net.sf.json-lib/json-lib &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>net.sf.json-lib</groupId>-->
+<!--            <artifactId>json-lib</artifactId>-->
+<!--            <version>2.4</version>-->
+<!--            <classifier>jdk15</classifier>-->
+<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.58</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

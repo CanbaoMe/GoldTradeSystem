@@ -1,10 +1,15 @@
 package com.czb.goldtradesystem.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
+@Data
 @Table(name = "gold_product_info")
-public class GoldProductInfo {
+public class GoldProductInfo  implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     private String productType;
 
@@ -17,35 +22,4 @@ public class GoldProductInfo {
     @Column(name = "opr_time")
     private String oprTime;
 
-    public String getProductType() {
-        return productType;
-    }
-
-    public void setProductType(String productType) {
-        this.productType = productType == null ? null : productType.trim();
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName == null ? null : productName.trim();
-    }
-
-    public BigDecimal getEnterpriseRate() {
-        return enterpriseRate;
-    }
-
-    public void setEnterpriseRate(BigDecimal enterpriseRate) {
-        this.enterpriseRate = enterpriseRate;
-    }
-
-    public String getOprTime() {
-        return oprTime;
-    }
-
-    public void setOprTime(String oprTime) {
-        this.oprTime = oprTime == null ? null : oprTime.trim();
-    }
 }

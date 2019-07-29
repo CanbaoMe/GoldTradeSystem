@@ -62,4 +62,17 @@ public interface GoldTradeSystem {
      */
     public UserInfoOut queryUserInfo(UserInfoIn in );
 
+    /**
+     * 查询用户所有交易信息
+     * @param in
+     * @return 所有信息
+     */
+    public UserAllTradeInfoOut queryUserAllTradeInfo(UserAllTradeInfoIn in );
+
+    /**
+     * 查询用户持仓信息
+     * @param in
+     * @return 所有信息
+     */
+    public QueryUserHoldInfoOut  queryUserHoldInfo(QueryUserHoldInfoIn in);
 }

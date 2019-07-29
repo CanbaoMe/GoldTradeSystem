@@ -4,14 +4,12 @@ import com.czb.goldtradesystem.api.in.PurchaseGoldIn;
 import com.czb.goldtradesystem.api.out.PurchaseGoldOut;
 import com.czb.goldtradesystem.model.PurchaseReponse;
 import com.czb.goldtradesystem.model.PurchaseRequest;
-import com.czb.goldtradesystem.model.QueryRecordResponse;
 import com.czb.goldtradesystem.service.GoldTradeSystemImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
